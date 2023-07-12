@@ -1,0 +1,6 @@
+{
+  "Threads": 1,
+  "Proxied": false,
+  "Proxy File": "proxies.txt",
+  "Username Generation Algorithm": "RandomLetters"
+}
