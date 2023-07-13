@@ -1,5 +1,8 @@
+import time
+
 from rbxapi.utils import get_csrf_token
 import requests
+from colorama import Fore, Style
 
 csrf_token = get_csrf_token()
 
@@ -14,13 +17,17 @@ def is_username_taken(username, proxy, accept_not_appropriate):
     })
 
     if proxy is not False:
-        print("Setting proxies")
         session.proxies = {
             "http": proxy,
             "https": proxy
         }
 
-    response = session.post("https://auth.roblox.com/v1/usernames/validate", json={"username": username, "context": "Signup", "birthday": "1971-08-03T04:00:00.000Z"})
+    try:
+        response = session.post("https://auth.roblox.com/v1/usernames/validate", json={"username": username, "context": "Signup", "birthday": "1971-08-03T04:00:00.000Z"})
+    except:
+        print(Fore.YELLOW + "Checking status failed for \""+username+"\", retrying..." + Fore.RESET)
+        time.sleep(0.5)
+        return is_username_taken(username, proxy, accept_not_appropriate)
     if response.status_code == 200:
         json = response.json()
         if json["code"] == 0 and json["message"] == "Username is valid.":
