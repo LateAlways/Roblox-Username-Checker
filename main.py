@@ -7,25 +7,27 @@ import utils.thread as threading
 
 from threading import Thread
 import json
+from discord_webhook import DiscordWebhook, DiscordEmbed
 import os
 
 
 config = json.load(open("config.json", "r"))
 
-THREADS = config["Threads"]
+THREADS = config["threads"]
 init()
 os.system("cls")
 
 proxy_manager: ProxyManager = ProxyManager()
-if config["Proxied"] is True:
-    proxy_manager.load_from_file(config["Proxy File"])
+if config["proxies"] is not False:
+    proxy_manager.load_from_file(config["proxies"])
 username_generator: UsernameGeneration
-if config["Username Generation Algorithm"] == "RandomLetters":
+if config["username_generation_algorithm"] == "RandomLetters":
     username_generator = RandomLetters()
 
 available = 0
 taken = 0
 TAKEN = True
+
 
 def run():
     global available
@@ -39,6 +41,16 @@ def run():
         if status is not TAKEN:
             print("[" + Fore.GREEN + "+" + Fore.RESET + "] " + Fore.GREEN + username + " is not taken! | https://roblox.com/register" + Fore.RESET)
             available += 1
+            with open(config["username_save_file"], "a") as file:
+                file.write(username + "\n")
+                file.close()
+
+            # discord webhook
+            if config["webhook"] is not False:
+                webhook = DiscordWebhook(url=config["webhook"])
+                embed = DiscordEmbed(title="Username sniped!", description="Username: " + username + "\nLink: https://roblox.com/", color=242424)
+                webhook.add_embed(embed)
+                webhook.execute()
             threading.wait()
         else:
             threading.print("[" + Fore.RED + "-" + Fore.RESET + "] " + Fore.RED + username + " is taken." + Fore.RESET)

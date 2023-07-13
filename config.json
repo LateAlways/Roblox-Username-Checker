@@ -1,6 +1,7 @@
 {
-  "Threads": 1,
-  "Proxied": false,
-  "Proxy File": "proxies.txt",
-  "Username Generation Algorithm": "RandomLetters"
+  "threads": 1,
+  "proxies": "proxies.txt",
+  "username_generation_algorithm": "RandomLetters",
+  "username_save_file": "usernames.txt",
+  "webhook": "https://discord.com/api/webhooks/xxxxxxxxxxxxxxxxxxxxxxx/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 }

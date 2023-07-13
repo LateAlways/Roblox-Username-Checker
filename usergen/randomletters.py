@@ -11,7 +11,7 @@ class RandomLetters(UsernameGeneration):
     def get_next_user(self):
         current_position = 0
         for letter in range(len(self.current_letters)):
-            if self.current_letters[current_position] >= 25:
+            if self.current_letters[current_position] >= len(self.letters)-1:
                 self.current_letters[current_position] = 0
                 current_position += 1
             else:
