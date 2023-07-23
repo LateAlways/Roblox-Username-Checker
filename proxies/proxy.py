@@ -35,10 +35,7 @@ class Proxy:
         return self.ip + ":" + self.port
 
     def is_valid(self):
-        m = re.match('^((([^:]+):([^@]+))@)?((\d{1,3}\.){3}\d{1,3}):(\d{1,5})?$', self.get_full_name())
-        if m is None:
-            return False
-        return self.is_ip_valid() and self.is_port_valid()
+        return True
 
     def get_last_used(self):
         return self.last_used

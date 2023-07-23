@@ -1,6 +1,6 @@
 from colorama import init, Fore
 from proxies.proxymanager import ProxyManager
-from rbxapi.auth import is_username_taken
+from rbxapi.auth import get_available_usernames
 from usergen.base.UsernameGeneration import UsernameGeneration
 from usergen.randomletters import RandomLetters
 import utils.thread as threading
@@ -26,8 +26,6 @@ if config["username_generation_algorithm"] == "RandomLetters":
 
 available = 0
 taken = 0
-TAKEN = True
-
 
 def run():
     global available
@@ -36,10 +34,10 @@ def run():
         while threading.pausing:
             pass
 
-        username = username_generator.get_next_user()
-        status = is_username_taken(username, proxy_manager.get_proxy().get_full_name() if len(proxy_manager.http_proxies) > 0 else False, False)
-        if status is not TAKEN:
-            print("[" + Fore.GREEN + "+" + Fore.RESET + "] " + Fore.GREEN + username + " is not taken! | https://roblox.com/register" + Fore.RESET)
+        usernames = username_generator.get_next_users(config["batch"])
+        available_users, non_available = get_available_usernames(usernames, proxy_manager.get_proxy().get_full_name() if len(proxy_manager.http_proxies) > 0 else False)
+        for username in available_users:
+            print("[" + Fore.GREEN + "+" + Fore.RESET + "] " + Fore.GREEN + username + " is not taken! | https://roblox.com/" + Fore.RESET)
             available += 1
             with open(config["username_save_file"], "a") as file:
                 file.write(username + "\n")
@@ -52,7 +50,8 @@ def run():
                 webhook.add_embed(embed)
                 webhook.execute()
             threading.wait()
-        else:
+
+        for username in non_available:
             threading.print("[" + Fore.RED + "-" + Fore.RESET + "] " + Fore.RED + username + " is taken." + Fore.RESET)
             taken += 1
 

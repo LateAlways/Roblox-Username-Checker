@@ -1,3 +1,4 @@
+import os
 import time
 
 from rbxapi.utils import get_csrf_token
@@ -6,9 +7,7 @@ from colorama import Fore, Style
 
 csrf_token = get_csrf_token()
 
-
-
-def is_username_taken(username, proxy, accept_not_appropriate):
+def get_available_usernames(usernames, proxy):
     global csrf_token
 
     session = requests.session()
@@ -17,27 +16,43 @@ def is_username_taken(username, proxy, accept_not_appropriate):
     })
 
     if proxy is not False:
-        session.proxies = {
+        session.trust_env = False
+        session.proxies.update({
             "http": proxy,
             "https": proxy
-        }
+        })
+        os.environ["HTTP_PROXY"] = proxy
+        os.environ["HTTPS_PROXY"] = proxy
 
     try:
-        response = session.post("https://auth.roblox.com/v1/usernames/validate", json={"username": username, "context": "Signup", "birthday": "1971-08-03T04:00:00.000Z"})
-    except:
-        print(Fore.YELLOW + "Checking status failed for \""+username+"\", retrying..." + Fore.RESET)
+        response = session.post("https://users.roblox.com/v1/usernames/users", json={"usernames": usernames, "excludeBannedUsers": False})
+    except KeyboardInterrupt:
+        for user in usernames:
+            print(Fore.YELLOW + "Checking status failed for \"" + user + "\", retrying..." + Fore.RESET)
         time.sleep(0.5)
-        return is_username_taken(username, proxy, accept_not_appropriate)
+        return get_available_usernames(usernames, proxy)
     if response.status_code == 200:
         json = response.json()
-        if json["code"] == 0 and json["message"] == "Username is valid.":
-            return False
-        elif json["code"] == 2 and accept_not_appropriate:
-            return False
-        elif json["code"] == 1 and json["message"] == "Username is already in use":
-            return True
-        return True
+        taken = []
+        non_taken = []
+        for user in usernames:
+            found = False
+            for valid_user in json["data"]:
+                if valid_user["requestedUsername"] == user:
+                    found = True
+                    taken.append(user)
+                    break
+            if not found:
+                non_taken.append(user)
+
+        return [non_taken, taken]
     elif response.status_code == 403:
         csrf_token = get_csrf_token()
 
-        return is_username_taken(username, proxy, accept_not_appropriate)
+        return get_available_usernames(usernames, proxy)
+    elif response.status_code == 429:
+        for user in usernames:
+            print(Fore.YELLOW + "Checking status failed for \"" + user + "\", retrying... (RATELIMIT)" + Fore.RESET)
+
+        time.sleep(15)
+        return get_available_usernames(usernames, proxy)
