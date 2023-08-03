@@ -36,12 +36,11 @@ def run():
 
         usernames = username_generator.get_next_users(config["batch"])
         available_users, non_available = get_available_usernames(usernames, proxy_manager.get_proxy().get_full_name() if len(proxy_manager.http_proxies) > 0 else False)
+        available_str = ""
         for username in available_users:
             print("[" + Fore.GREEN + "+" + Fore.RESET + "] " + Fore.GREEN + username + " is not taken! | https://roblox.com/" + Fore.RESET)
             available += 1
-            with open(config["username_save_file"], "a") as file:
-                file.write(username + "\n")
-                file.close()
+            available_str += username + "\n"
 
             # discord webhook
             if config["webhook"] is not False:
@@ -50,6 +49,10 @@ def run():
                 webhook.add_embed(embed)
                 webhook.execute()
             threading.wait()
+
+        with open(config["username_save_file"], "a") as file:
+            file.write(available_str)
+            file.close()
 
         for username in non_available:
             threading.print("[" + Fore.RED + "-" + Fore.RESET + "] " + Fore.RED + username + " is taken." + Fore.RESET)
