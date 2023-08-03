@@ -11,7 +11,6 @@ def get_available_usernames(usernames, proxy):
     global csrf_token
 
     if proxy is not False:
-        print(proxy)
         os.environ["HTTP_PROXY"] = proxy
         os.environ["HTTPS_PROXY"] = proxy
 
