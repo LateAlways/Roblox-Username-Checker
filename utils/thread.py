@@ -7,8 +7,9 @@ running = True
 pausing = False
 
 
+print_comm = print
+
 def print(msg):
-    global queue
     queue.append(msg)
 
 
@@ -26,7 +27,7 @@ def update_title(available, taken):
 def update(available, taken):
     global queue
     if len(queue) > 0:
-        print(queue[0])
+        print_comm(queue[0])
         queue.pop(0)
 
     update_title(available, taken)

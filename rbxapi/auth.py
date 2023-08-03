@@ -10,23 +10,16 @@ csrf_token = get_csrf_token()
 def get_available_usernames(usernames, proxy):
     global csrf_token
 
-    session = requests.session()
-    session.headers.update({
-        "x-csrf-token": csrf_token
-    })
-
     if proxy is not False:
-        session.trust_env = False
-        session.proxies.update({
-            "http": proxy,
-            "https": proxy
-        })
+        print(proxy)
         os.environ["HTTP_PROXY"] = proxy
         os.environ["HTTPS_PROXY"] = proxy
 
     try:
-        response = session.post("https://users.roblox.com/v1/usernames/users", json={"usernames": usernames, "excludeBannedUsers": False})
+        response = requests.post("https://users.roblox.com/v1/usernames/users", headers={"x-csrf-token": csrf_token}, json={"usernames": usernames, "excludeBannedUsers": False})
     except KeyboardInterrupt:
+        exit()
+    except Exception:
         for user in usernames:
             print(Fore.YELLOW + "Checking status failed for \"" + user + "\", retrying..." + Fore.RESET)
         time.sleep(0.5)

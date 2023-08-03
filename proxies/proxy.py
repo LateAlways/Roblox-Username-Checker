@@ -32,7 +32,7 @@ class Proxy:
         return False
 
     def get_full_name(self):
-        return self.ip + ":" + self.port
+        return "http://"+self.ip + ":" + self.port
 
     def is_valid(self):
         return True

@@ -1,5 +1,5 @@
 {
-  "threads": 1,
+  "threads": 5,
   "batch": 97,
   "proxies": "proxies.txt",
   "username_generation_algorithm": "RandomLetters",
