@@ -2,7 +2,7 @@ from usergen.base.UsernameGeneration import UsernameGeneration
 
 
 class RandomLetters(UsernameGeneration):
-    def __init__(self, start_length=4):
+    def __init__(self, start_length=6):
         self.letters = "abcdefghijklmnopqrstuvwxyz"
         self.length = start_length
 
