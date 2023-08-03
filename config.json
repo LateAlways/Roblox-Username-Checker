@@ -4,5 +4,5 @@
   "proxies": "proxies.txt",
   "username_generation_algorithm": "RandomLetters",
   "username_save_file": "usernames.txt",
-  "webhook": "https://discord.com/api/webhooks/1128841879501414530/M7W1mpTeS49GDergp2DJeenAIu7BHefbtdZ6GypJN5wBHhaDKeRkACRkNSotYnBUreue"
+  "webhook": "discord webhook"
 }
