@@ -2,16 +2,21 @@ from colorama import init, Fore
 from proxies.proxymanager import ProxyManager
 from rbxapi.auth import get_available_usernames
 from usergen.base.UsernameGeneration import UsernameGeneration
+from usergen.fromfile import FromFile
 from usergen.randomletters import RandomLetters
 import utils.thread as threading
 
 from threading import Thread
 import json
-from discord_webhook import DiscordWebhook, DiscordEmbed
+
+config = json.load(open("config.json", "r"))
+
+if config["webhook"] is not False:
+    from discord_webhook import DiscordWebhook, DiscordEmbed
 import os
 
 
-config = json.load(open("config.json", "r"))
+
 
 THREADS = config["threads"]
 init()
@@ -23,6 +28,8 @@ if config["proxies"] is not False:
 username_generator: UsernameGeneration
 if config["username_generation_algorithm"] == "RandomLetters":
     username_generator = RandomLetters()
+if config["username_generation_algorithm"] == "FromFile":
+    username_generator = FromFile(config["fromfile_file"])
 
 available = 0
 taken = 0
