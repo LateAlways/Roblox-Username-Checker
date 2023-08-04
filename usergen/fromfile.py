@@ -9,4 +9,7 @@ class FromFile(UsernameGeneration):
                 self.users.append(line.strip())
 
     def get_next_user(self):
-        return self.users.pop(0)
+        if len(self.users) > 0:
+            return self.users.pop(0)
+        else:
+            return

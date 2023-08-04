@@ -42,6 +42,8 @@ def run():
             pass
 
         usernames = username_generator.get_next_users(config["batch"])
+        if len(usernames) == 0:
+            return
         available_users, non_available = get_available_usernames(usernames, proxy_manager.get_proxy().get_full_name() if len(proxy_manager.http_proxies) > 0 else False)
         available_str = ""
         for username in available_users:

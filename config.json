@@ -6,5 +6,5 @@
   "fromfile_file": "usernames_in.txt",
   "username generation algorithms": ["RandomLetters", "FromFile"],
   "username_save_file": "usernames_out.txt",
-  "webhook": "discord webhook"
+  "webhook": false
 }

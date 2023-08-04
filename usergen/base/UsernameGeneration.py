@@ -9,4 +9,11 @@ class UsernameGeneration:
         pass
 
     def get_next_users(self, number: int):
-        return [self.get_next_user() for i in range(number)]
+        l = []
+        for i in range(number):
+            x = self.get_next_user()
+            if x is not None:
+                l.append(x)
+            else:
+                break
+        return l
