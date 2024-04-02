@@ -1,4 +1,5 @@
 from usergen.base.UsernameGeneration import UsernameGeneration
+import requests
 
 
 class SoundsLike(UsernameGeneration):
