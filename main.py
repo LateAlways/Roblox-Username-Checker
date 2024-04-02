@@ -4,6 +4,7 @@ from rbxapi.auth import get_available_usernames
 from usergen.base.UsernameGeneration import UsernameGeneration
 from usergen.fromfile import FromFile
 from usergen.randomletters import RandomLetters
+from usergen.soundslike import SoundsLike
 import utils.thread as threading
 
 from threading import Thread
@@ -30,6 +31,8 @@ if config["username_generation_algorithm"] == "RandomLetters":
     username_generator = RandomLetters()
 if config["username_generation_algorithm"] == "FromFile":
     username_generator = FromFile(config["fromfile_file"])
+if config["username_generation_algorithm"] == "SoundsLike":
+    username_generator = SoundsLike(config["soundslike_soundslike"])
 
 available = 0
 taken = 0
