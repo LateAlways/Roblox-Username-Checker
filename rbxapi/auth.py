@@ -48,3 +48,27 @@ def get_available_usernames(usernames, proxy):
 
         time.sleep(15)
         return get_available_usernames(usernames, proxy)
+
+def validate_username(username, proxy):
+    global csrf_token
+    if proxy is not False:
+        os.environ["HTTP_PROXY"] = proxy
+        os.environ["HTTPS_PROXY"] = proxy
+        
+    r = requests.post("https://auth.roblox.com/v1/usernames/validate", headers={
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0",
+        "Accept": "application/json, text/plain, */*",
+        "Accept-Language": "en-US,en;q=0.5",
+        "Connection": "keep-alive",
+        "x-csrf-token": csrf_token
+    }, json={"username":username,"context":"Signup","birthday":"1971-08-03T04:00:00.000Z"}).json()
+    if "error" in r:
+        return False
+    if "errors" in r and errors[0]["message"] == "Token Validation Failed":
+        csrf_token = get_csrf_token()
+        return validate_username(username, proxy)
+    if "code" in r and r["code"] == 0:
+        return True
+    else:
+        return False
+    
