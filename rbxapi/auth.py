@@ -15,7 +15,7 @@ def get_available_usernames(usernames, proxy):
         os.environ["HTTPS_PROXY"] = proxy
 
     try:
-        response = requests.post("https://users.roblox.com/v1/usernames/users", headers={"x-csrf-token": csrf_token}, json={"usernames": usernames, "excludeBannedUsers": True})
+        response = requests.post("https://users.roblox.com/v1/usernames/users", headers={"x-csrf-token": csrf_token}, json={"usernames": usernames, "excludeBannedUsers": False})
     except KeyboardInterrupt:
         exit()
     except Exception:
