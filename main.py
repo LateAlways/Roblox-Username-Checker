@@ -1,6 +1,6 @@
 from colorama import init, Fore
 from proxies.proxymanager import ProxyManager
-from rbxapi.auth import get_available_usernames
+from rbxapi.auth import get_available_usernames, validate_username
 from usergen.base.UsernameGeneration import UsernameGeneration
 from usergen.fromfile import FromFile
 from usergen.randomletters import RandomLetters
@@ -50,6 +50,10 @@ def run():
         available_users, non_available = get_available_usernames(usernames, proxy_manager.get_proxy().get_full_name() if len(proxy_manager.http_proxies) > 0 else False)
         available_str = ""
         for username in available_users:
+            if not validate_username(username, proxy_manager.get_proxy().get_full_name() if len(proxy_manager.http_proxies) > 0 else False):
+                non_available.push(username)
+                continue
+                
             print("[" + Fore.GREEN + "+" + Fore.RESET + "] " + Fore.GREEN + username + " is not taken! | https://roblox.com/" + Fore.RESET)
             available += 1
             available_str += username + "\n"
